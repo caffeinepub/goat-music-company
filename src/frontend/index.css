@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== FONTS ===== */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/assets/fonts/BricolageGrotesque[opsz,wdth,wght].woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("/assets/fonts/CabinetGrotesk-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Mona Sans";
+  src: url("/assets/fonts/Mona-Sans.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/assets/fonts/GeistMono[wght].woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --radius: 0.25rem;
+
+    /* === GOAT Music — Dark Premium Theme === */
+    /* Background: near-black charcoal */
+    --background: 0.1 0.005 260;
+    --foreground: 0.95 0.01 80;
+
+    /* Cards: very dark with slight warmth */
+    --card: 0.13 0.008 260;
+    --card-foreground: 0.95 0.01 80;
+
+    /* Popover */
+    --popover: 0.15 0.01 260;
+    --popover-foreground: 0.95 0.01 80;
+
+    /* Primary: gold/amber — the signature accent */
+    --primary: 0.78 0.16 68;
+    --primary-foreground: 0.08 0.01 260;
+
+    /* Secondary: dark muted surface */
+    --secondary: 0.18 0.01 260;
+    --secondary-foreground: 0.85 0.01 80;
+
+    /* Muted */
+    --muted: 0.16 0.008 260;
+    --muted-foreground: 0.55 0.01 80;
+
+    /* Accent: bright gold flash */
+    --accent: 0.82 0.18 68;
+    --accent-foreground: 0.08 0.01 260;
+
+    /* Destructive: deep red */
+    --destructive: 0.6 0.22 25;
+    --destructive-foreground: 0.98 0 0;
+
+    /* Borders & inputs */
+    --border: 0.22 0.01 260;
+    --input: 0.2 0.01 260;
+    --ring: 0.78 0.16 68;
+
+    /* Charts */
+    --chart-1: 0.78 0.16 68;
+    --chart-2: 0.65 0.18 25;
+    --chart-3: 0.7 0.15 290;
+    --chart-4: 0.72 0.12 160;
+    --chart-5: 0.6 0.2 220;
+
+    /* Sidebar */
+    --sidebar: 0.12 0.008 260;
+    --sidebar-foreground: 0.9 0.01 80;
+    --sidebar-primary: 0.78 0.16 68;
+    --sidebar-primary-foreground: 0.08 0.01 260;
+    --sidebar-accent: 0.18 0.01 260;
+    --sidebar-accent-foreground: 0.9 0.01 80;
+    --sidebar-border: 0.22 0.01 260;
+    --sidebar-ring: 0.78 0.16 68;
+
+    /* Gold custom tokens */
+    --gold: 0.78 0.16 68;
+    --gold-bright: 0.85 0.2 75;
+    --gold-dim: 0.6 0.12 68;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Mona Sans", "Cabinet Grotesk", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Bricolage Grotesque", "Cabinet Grotesk", system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  /* Gold shimmer text */
+  .text-gold {
+    color: oklch(var(--gold));
+  }
+
+  .text-gold-bright {
+    color: oklch(var(--gold-bright));
+  }
+
+  /* Grain texture overlay */
+  .grain-overlay {
+    position: relative;
+  }
+
+  .grain-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    border-radius: inherit;
+  }
+
+  /* Gold border glow */
+  .gold-glow {
+    box-shadow: 0 0 20px oklch(var(--gold) / 0.2), 0 0 60px oklch(var(--gold) / 0.05);
+  }
+
+  /* Animated underline */
+  .animated-underline {
+    position: relative;
+  }
+
+  .animated-underline::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: oklch(var(--gold));
+    transition: width 0.3s ease;
+  }
+
+  .animated-underline:hover::after {
+    width: 100%;
+  }
+
+  /* Copyright badge style */
+  .copyright-badge {
+    font-family: "Geist Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: oklch(var(--gold-dim));
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Bricolage Grotesque", sans-serif;
+  }
+
+  .font-body {
+    font-family: "Mona Sans", sans-serif;
+  }
+
+  .font-mono-code {
+    font-family: "Geist Mono", monospace;
+  }
+}

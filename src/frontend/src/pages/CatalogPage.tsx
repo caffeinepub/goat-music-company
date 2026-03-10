@@ -4,13 +4,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Disc3, Filter } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
-import type { Artist, Release } from "../backend.d";
-import {
-  ALBUM_COVERS,
-  SAMPLE_ARTISTS,
-  SAMPLE_RELEASES,
-  getCopyright,
-} from "../data/sampleData";
+import type { Release } from "../backend.d";
+import { getCopyright } from "../data/sampleData";
 import { useListArtists, useListReleases } from "../hooks/useQueries";
 
 const container = {
@@ -30,11 +25,6 @@ const item = {
   },
 };
 
-function getCoverImage(release: Release): string {
-  const id = String(release.id);
-  return ALBUM_COVERS[id] ?? "/assets/generated/album-1.dim_300x300.jpg";
-}
-
 function ReleaseCard({
   release,
   artistName,
@@ -45,28 +35,19 @@ function ReleaseCard({
   index: number;
 }) {
   const copyright = getCopyright(release, artistName);
-  const cover = getCoverImage(release);
 
   return (
     <motion.article
       variants={item}
       data-ocid={`catalog.item.${index + 1}`}
-      className="group flex gap-4 p-4 bg-card border border-border hover:border-gold/20 transition-all duration-200 hover:bg-card/80"
+      className="group flex gap-4 p-4 bg-card border border-border hover:border-ice/20 transition-all duration-200 hover:bg-card/80"
     >
-      {/* Album art */}
-      <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0 overflow-hidden bg-muted rounded-sm">
-        <img
-          src={cover}
-          alt={release.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          loading="lazy"
+      {/* Album placeholder */}
+      <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0 overflow-hidden bg-secondary rounded-sm flex items-center justify-center">
+        <Disc3
+          className="w-8 h-8 opacity-30 group-hover:opacity-60 group-hover:animate-spin transition-opacity"
+          style={{ color: "oklch(var(--ice))", animationDuration: "3s" }}
         />
-        <div className="absolute inset-0 bg-background/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <Disc3
-            className="w-6 h-6 animate-spin"
-            style={{ color: "oklch(var(--gold))", animationDuration: "3s" }}
-          />
-        </div>
       </div>
 
       {/* Info */}
@@ -116,34 +97,22 @@ function CatalogSkeleton() {
 export default function CatalogPage() {
   const [genreFilter, setGenreFilter] = useState<string>("All");
 
-  const { data: backendReleases, isLoading: releasesLoading } =
-    useListReleases();
-  const { data: backendArtists } = useListArtists();
+  const { data: releases, isLoading: releasesLoading } = useListReleases();
+  const { data: artists } = useListArtists();
 
-  // Use sample data if backend is empty
-  const releases =
-    backendReleases && backendReleases.length > 0
-      ? backendReleases
-      : !releasesLoading
-        ? SAMPLE_RELEASES
-        : [];
-
-  const artists =
-    backendArtists && backendArtists.length > 0
-      ? backendArtists
-      : SAMPLE_ARTISTS;
-
-  const artistMap = new Map<string, Artist>(
-    artists.map((a) => [String(a.id), a]),
-  );
+  const artistMap = new Map((artists ?? []).map((a) => [String(a.id), a]));
 
   // Get unique genres
-  const genres = ["All", ...Array.from(new Set(releases.map((r) => r.genre)))];
+  const allReleases = releases ?? [];
+  const genres = [
+    "All",
+    ...Array.from(new Set(allReleases.map((r) => r.genre))),
+  ];
 
   const filtered =
     genreFilter === "All"
-      ? releases
-      : releases.filter((r) => r.genre === genreFilter);
+      ? allReleases
+      : allReleases.filter((r) => r.genre === genreFilter);
 
   return (
     <div className="min-h-screen">
@@ -153,7 +122,7 @@ export default function CatalogPage() {
           className="absolute inset-0 opacity-30"
           style={{
             background:
-              "radial-gradient(ellipse 70% 80% at 50% -20%, oklch(0.6 0.12 68 / 0.1) 0%, transparent 60%)",
+              "radial-gradient(ellipse 70% 80% at 50% -20%, oklch(0.75 0.18 210 / 0.1) 0%, transparent 60%)",
           }}
         />
         <div className="container mx-auto max-w-7xl relative z-10">
@@ -162,7 +131,7 @@ export default function CatalogPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="font-body text-xs uppercase tracking-[0.3em] text-gold mb-4">
+            <p className="font-body text-xs uppercase tracking-[0.3em] text-ice mb-4">
               GOAT Music Company
             </p>
             <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl text-foreground mb-4">
@@ -194,7 +163,7 @@ export default function CatalogPage() {
                     ${
                       genreFilter === genre
                         ? "bg-primary text-primary-foreground"
-                        : "border border-border text-muted-foreground hover:border-gold/30 hover:text-foreground"
+                        : "border border-border text-muted-foreground hover:border-ice/30 hover:text-foreground"
                     }
                   `}
                 >
@@ -218,7 +187,7 @@ export default function CatalogPage() {
             >
               <Disc3
                 className="w-12 h-12 mx-auto mb-4 opacity-30"
-                style={{ color: "oklch(var(--gold))" }}
+                style={{ color: "oklch(var(--ice))" }}
               />
               <h3 className="font-display font-bold text-xl text-muted-foreground mb-2">
                 No Releases Found
@@ -233,7 +202,7 @@ export default function CatalogPage() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setGenreFilter("All")}
-                  className="mt-4 text-gold hover:text-gold/80"
+                  className="mt-4 text-ice hover:text-ice/80"
                 >
                   Clear filter
                 </Button>

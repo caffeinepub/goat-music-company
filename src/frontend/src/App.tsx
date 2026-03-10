@@ -6,10 +6,11 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import Layout from "./components/Layout";
+import ActorsPage from "./pages/ActorsPage";
 import AdminPage from "./pages/AdminPage";
-import CatalogPage from "./pages/CatalogPage";
+import ComicsPage from "./pages/ComicsPage";
 import HomePage from "./pages/HomePage";
-import RosterPage from "./pages/RosterPage";
+import RecordingsPage from "./pages/RecordingsPage";
 
 // ===== ROUTES =====
 const rootRoute = createRootRoute({
@@ -28,16 +29,22 @@ const homeRoute = createRoute({
   component: HomePage,
 });
 
-const rosterRoute = createRoute({
+const recordingsRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/roster",
-  component: RosterPage,
+  path: "/recordings",
+  component: RecordingsPage,
 });
 
-const catalogRoute = createRoute({
+const comicsRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/catalog",
-  component: CatalogPage,
+  path: "/comics",
+  component: ComicsPage,
+});
+
+const actorsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/actors",
+  component: ActorsPage,
 });
 
 const adminRoute = createRoute({
@@ -48,8 +55,9 @@ const adminRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   homeRoute,
-  rosterRoute,
-  catalogRoute,
+  recordingsRoute,
+  comicsRoute,
+  actorsRoute,
   adminRoute,
 ]);
 
@@ -70,9 +78,9 @@ export default function App() {
         position="bottom-right"
         toastOptions={{
           style: {
-            background: "oklch(0.15 0.01 260)",
-            border: "1px solid oklch(0.22 0.01 260)",
-            color: "oklch(0.95 0.01 80)",
+            background: "oklch(0.15 0.035 240)",
+            border: "1px solid oklch(0.22 0.03 240)",
+            color: "oklch(0.95 0.015 210)",
             fontFamily: "Mona Sans, sans-serif",
           },
         }}

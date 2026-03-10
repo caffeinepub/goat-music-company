@@ -21,6 +21,13 @@ export const Artist = IDL.Record({
   'genre' : IDL.Text,
 });
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
+export const DomainActor = IDL.Record({
+  'id' : IDL.Nat,
+  'bio' : IDL.Text,
+  'name' : IDL.Text,
+  'specialty' : IDL.Text,
+  'imageUrl' : IDL.Text,
+});
 export const Release = IDL.Record({
   'id' : IDL.Nat,
   'title' : IDL.Text,
@@ -36,6 +43,11 @@ export const idlService = IDL.Service({
       [IDL.Nat],
       [],
     ),
+  'addDomainActor' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [IDL.Nat],
+      [],
+    ),
   'addRelease' : IDL.Func(
       [IDL.Text, IDL.Nat, IDL.Nat, IDL.Text],
       [IDL.Nat],
@@ -43,10 +55,12 @@ export const idlService = IDL.Service({
     ),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'deleteArtist' : IDL.Func([IDL.Nat], [], []),
+  'deleteDomainActor' : IDL.Func([IDL.Nat], [], []),
   'deleteRelease' : IDL.Func([IDL.Nat], [], []),
   'getArtist' : IDL.Func([IDL.Nat], [IDL.Opt(Artist)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getDomainActor' : IDL.Func([IDL.Nat], [IDL.Opt(DomainActor)], ['query']),
   'getRelease' : IDL.Func([IDL.Nat], [IDL.Opt(Release)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
@@ -55,10 +69,16 @@ export const idlService = IDL.Service({
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'listArtists' : IDL.Func([], [IDL.Vec(Artist)], ['query']),
+  'listDomainActors' : IDL.Func([], [IDL.Vec(DomainActor)], ['query']),
   'listReleases' : IDL.Func([], [IDL.Vec(Release)], ['query']),
   'listReleasesByArtist' : IDL.Func([IDL.Nat], [IDL.Vec(Release)], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'updateArtist' : IDL.Func(
+      [IDL.Nat, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [],
+      [],
+    ),
+  'updateDomainActor' : IDL.Func(
       [IDL.Nat, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
       [],
       [],
@@ -86,6 +106,13 @@ export const idlFactory = ({ IDL }) => {
     'genre' : IDL.Text,
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
+  const DomainActor = IDL.Record({
+    'id' : IDL.Nat,
+    'bio' : IDL.Text,
+    'name' : IDL.Text,
+    'specialty' : IDL.Text,
+    'imageUrl' : IDL.Text,
+  });
   const Release = IDL.Record({
     'id' : IDL.Nat,
     'title' : IDL.Text,
@@ -101,6 +128,11 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Nat],
         [],
       ),
+    'addDomainActor' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [IDL.Nat],
+        [],
+      ),
     'addRelease' : IDL.Func(
         [IDL.Text, IDL.Nat, IDL.Nat, IDL.Text],
         [IDL.Nat],
@@ -108,10 +140,12 @@ export const idlFactory = ({ IDL }) => {
       ),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'deleteArtist' : IDL.Func([IDL.Nat], [], []),
+    'deleteDomainActor' : IDL.Func([IDL.Nat], [], []),
     'deleteRelease' : IDL.Func([IDL.Nat], [], []),
     'getArtist' : IDL.Func([IDL.Nat], [IDL.Opt(Artist)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getDomainActor' : IDL.Func([IDL.Nat], [IDL.Opt(DomainActor)], ['query']),
     'getRelease' : IDL.Func([IDL.Nat], [IDL.Opt(Release)], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
@@ -120,10 +154,16 @@ export const idlFactory = ({ IDL }) => {
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'listArtists' : IDL.Func([], [IDL.Vec(Artist)], ['query']),
+    'listDomainActors' : IDL.Func([], [IDL.Vec(DomainActor)], ['query']),
     'listReleases' : IDL.Func([], [IDL.Vec(Release)], ['query']),
     'listReleasesByArtist' : IDL.Func([IDL.Nat], [IDL.Vec(Release)], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'updateArtist' : IDL.Func(
+        [IDL.Nat, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [],
+        [],
+      ),
+    'updateDomainActor' : IDL.Func(
         [IDL.Nat, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
         [],
         [],

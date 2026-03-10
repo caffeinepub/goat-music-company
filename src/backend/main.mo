@@ -8,7 +8,9 @@ import Array "mo:core/Array";
 import Principal "mo:core/Principal";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -33,6 +35,14 @@ actor {
     genre : Text;
   };
 
+  type DomainActor = {
+    id : Nat;
+    name : Text;
+    specialty : Text;
+    bio : Text;
+    imageUrl : Text;
+  };
+
   module Artist {
     public func compare(a1 : Artist, a2 : Artist) : Order.Order {
       Nat.compare(a1.id, a2.id);
@@ -45,11 +55,19 @@ actor {
     };
   };
 
-  stable var nextArtistId = 1;
-  stable var nextReleaseId = 1;
+  module DomainActor {
+    public func compare(a1 : DomainActor, a2 : DomainActor) : Order.Order {
+      Nat.compare(a1.id, a2.id);
+    };
+  };
+
+  var nextArtistId = 1;
+  var nextReleaseId = 1;
+  var nextDomainActorId = 1;
 
   let artists = Map.empty<Nat, Artist>();
   let releases = Map.empty<Nat, Release>();
+  let domainActors = Map.empty<Nat, DomainActor>();
   let userProfiles = Map.empty<Principal, UserProfile>();
 
   // User Profile Management
@@ -208,5 +226,63 @@ actor {
       };
     };
     filteredList.toArray().sort();
+  };
+
+  // DomainActor CRUD
+  public shared ({ caller }) func addDomainActor(name : Text, specialty : Text, bio : Text, imageUrl : Text) : async Nat {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can add actors");
+    };
+
+    let domainActor : DomainActor = {
+      id = nextDomainActorId;
+      name;
+      specialty;
+      bio;
+      imageUrl;
+    };
+
+    domainActors.add(domainActor.id, domainActor);
+    nextDomainActorId += 1;
+    domainActor.id;
+  };
+
+  public shared ({ caller }) func updateDomainActor(id : Nat, name : Text, specialty : Text, bio : Text, imageUrl : Text) : async () {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can update actors");
+    };
+
+    switch (domainActors.get(id)) {
+      case (null) { Runtime.trap("Actor not found") };
+      case (?existingDomainActor) {
+        let updatedDomainActor : DomainActor = {
+          id;
+          name;
+          specialty;
+          bio;
+          imageUrl;
+        };
+        domainActors.add(id, updatedDomainActor);
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteDomainActor(id : Nat) : async () {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can delete actors");
+    };
+
+    if (not domainActors.containsKey(id)) {
+      Runtime.trap("Actor not found");
+    };
+    domainActors.remove(id);
+  };
+
+  public query func getDomainActor(_id : Nat) : async ?DomainActor {
+    domainActors.get(_id);
+  };
+
+  public query func listDomainActors() : async [DomainActor] {
+    domainActors.values().toArray().sort();
   };
 };

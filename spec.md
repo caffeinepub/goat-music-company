@@ -1,28 +1,40 @@
-# GOAT Music Company
+# GOAT Music Company — Enterprise Expansion
 
 ## Current State
-New project. No existing code or data models.
+- Single-purpose music label site with: Homepage (hero, stats, features), Artist Roster page, Music Catalog page, Admin panel.
+- Backend: Artist and Release types with full CRUD, authorization via Internet Identity.
+- Theme: icy blue + navy.
+- Nav: Home, Roster, Catalog, Admin (admin-only).
 
 ## Requested Changes (Diff)
 
 ### Add
-- Homepage with company brand, hero section, and label identity
-- Artist roster section displaying all signed artists with name, genre, and bio
-- Music catalog section displaying all releases with title, artist, year, genre, and auto-generated copyright notice formatted as: Ⓟ [year] [artist name] under exclusive license to GOAT Music Company
-- Admin management panel (protected by authorization) with:
-  - Add/edit/remove artists (name, genre, bio, image URL)
-  - Add/edit/remove music releases (title, artist, year, genre)
-  - Copyright notice auto-generated from release data — not stored separately
-- Navigation between Homepage, Roster, Catalog, and Admin pages
+- **Homepage redesign**: New enterprise landing page with three distinct division cards — Recordings, Comics (StripClub Comics, 12+ rated), and Actors. Each card links to its dedicated division page. Keep hero and brand identity.
+- **Recordings page** (`/recordings`): Showcases GOAT Music's recording label division — artists and releases managed via existing backend data. Essentially the current Roster + Catalog content merged into one division page.
+- **Comics page** (`/comics`): StripClub Comics division. 12+ age rating badge prominently displayed. Static description page explaining the comics brand under GOAT enterprise. Link/reference to the StripClub Comics property.
+- **Actors page** (`/actors`): Talent/acting division. Admin can add/manage actors. Each actor has: name, role/specialty, bio, imageUrl. Public listing page.
+- **Actor types in backend**: `Actor` type with id, name, specialty, bio, imageUrl. CRUD endpoints: `addActor`, `updateActor`, `deleteActor`, `getActor`, `listActors`.
+- **Enterprise license section** on homepage: Brief statement that Recordings, Comics, and Actors operate under the GOAT Enterprise License.
+- **Nav update**: Replace Roster/Catalog with Recordings, Comics, Actors (+ Admin for admins). Keep Home link.
+- **Admin panel expansion**: Add actor management tab alongside artist management.
 
 ### Modify
-- None
+- **HomePage**: Completely replace content — new hero still uses GOAT brand, but body becomes three enterprise division cards + an enterprise license statement section.
+- **Layout/nav**: Update nav links to reflect new division structure.
+- **AdminPage**: Add actor management tab (add/edit/delete actors).
 
 ### Remove
-- None
+- Standalone `/roster` and `/catalog` routes (content moves to `/recordings` page).
+- Old feature cards (Artist Development, Global Distribution, Award-Winning Catalog) — replaced by division cards.
 
 ## Implementation Plan
-1. Backend: Define Artist and Release data types. Implement CRUD operations for artists and releases. Authorization for admin-only write operations. Query endpoints for public read access.
-2. Frontend: Multi-page layout with navigation. Homepage with hero and label branding. Artist roster page listing all artists. Music catalog page listing all releases with auto-generated copyright notice. Admin panel page with forms to create/edit/delete artists and releases.
-3. Copyright logic: Computed client-side as `Ⓟ ${release.year} ${artistName} under exclusive license to GOAT Music Company`.
-4. Authorization: Admin role gates write operations. Public users can view roster and catalog.
+1. Update `main.mo` backend: add `Actor` type, stable storage, CRUD functions.
+2. Run `generate_motoko_code` to regenerate backend and `backend.d.ts`.
+3. Frontend:
+   - Update `App.tsx`: add routes `/recordings`, `/comics`, `/actors`; remove `/roster`, `/catalog`.
+   - Update `Layout.tsx`: new nav links (Home, Recordings, Comics, Actors, Admin).
+   - Rewrite `HomePage.tsx`: enterprise hero + three division feature cards with links, enterprise license section.
+   - Create `RecordingsPage.tsx`: merged artist roster + music releases view (reads from existing backend).
+   - Create `ComicsPage.tsx`: StripClub Comics static division page, 12+ badge, brand info.
+   - Create `ActorsPage.tsx`: public actor listing, fetches from backend.
+   - Update `AdminPage.tsx`: add actors tab for managing actor records.

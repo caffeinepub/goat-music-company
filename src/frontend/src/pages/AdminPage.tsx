@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Check,
+  Clapperboard,
   Disc3,
   Loader2,
   Pencil,
@@ -35,20 +36,22 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
-import type { Artist, Release } from "../backend.d";
+import type { Artist, DomainActor, Release } from "../backend.d";
 import { getCopyright } from "../data/sampleData";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import {
-  useIsCallerAdmin,
-  useListArtists,
-  useListReleases,
-} from "../hooks/useQueries";
-import {
   useAddArtist,
+  useAddDomainActor,
   useAddRelease,
   useDeleteArtist,
+  useDeleteDomainActor,
   useDeleteRelease,
+  useIsCallerAdmin,
+  useListArtists,
+  useListDomainActors,
+  useListReleases,
   useUpdateArtist,
+  useUpdateDomainActor,
   useUpdateRelease,
 } from "../hooks/useQueries";
 
@@ -316,7 +319,7 @@ function ReleaseForm({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="p-3 bg-muted/50 border border-gold/20 rounded-sm"
+            className="p-3 bg-muted/50 border border-ice/20 rounded-sm"
           >
             <p className="text-xs uppercase tracking-wider text-muted-foreground font-body mb-1">
               Copyright Preview
@@ -330,6 +333,128 @@ function ReleaseForm({
         <Button
           type="submit"
           data-ocid="admin.release.submit_button"
+          disabled={isPending}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold uppercase tracking-wider gap-2"
+        >
+          {isPending ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Check className="w-4 h-4" />
+          )}
+          {isPending ? "Saving..." : submitLabel}
+        </Button>
+        {onCancel && (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={onCancel}
+            className="text-muted-foreground hover:text-foreground gap-2"
+          >
+            <X className="w-4 h-4" />
+            Cancel
+          </Button>
+        )}
+      </div>
+    </form>
+  );
+}
+
+// ===== ACTOR FORM =====
+interface ActorFormData {
+  name: string;
+  specialty: string;
+  bio: string;
+  imageUrl: string;
+}
+
+const EMPTY_ACTOR: ActorFormData = {
+  name: "",
+  specialty: "",
+  bio: "",
+  imageUrl: "",
+};
+
+function ActorForm({
+  initial,
+  onSubmit,
+  onCancel,
+  isPending,
+  submitLabel,
+}: {
+  initial?: ActorFormData;
+  onSubmit: (data: ActorFormData) => void;
+  onCancel?: () => void;
+  isPending: boolean;
+  submitLabel: string;
+}) {
+  const [form, setForm] = useState<ActorFormData>(initial ?? EMPTY_ACTOR);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
+    onSubmit(form);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <Label className="text-xs uppercase tracking-wider text-muted-foreground font-body">
+            Actor Name *
+          </Label>
+          <Input
+            data-ocid="admin.actor.input"
+            value={form.name}
+            onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+            placeholder="e.g. Jordan Reeves"
+            className="bg-muted border-border text-foreground font-body"
+            required
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs uppercase tracking-wider text-muted-foreground font-body">
+            Specialty
+          </Label>
+          <Input
+            value={form.specialty}
+            onChange={(e) =>
+              setForm((p) => ({ ...p, specialty: e.target.value }))
+            }
+            placeholder="e.g. Film / Commercial"
+            className="bg-muted border-border text-foreground font-body"
+          />
+        </div>
+      </div>
+      <div className="space-y-1.5">
+        <Label className="text-xs uppercase tracking-wider text-muted-foreground font-body">
+          Bio
+        </Label>
+        <Textarea
+          value={form.bio}
+          onChange={(e) => setForm((p) => ({ ...p, bio: e.target.value }))}
+          placeholder="Actor biography..."
+          rows={3}
+          className="bg-muted border-border text-foreground font-body resize-none"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label className="text-xs uppercase tracking-wider text-muted-foreground font-body">
+          Image URL
+        </Label>
+        <Input
+          value={form.imageUrl}
+          onChange={(e) => setForm((p) => ({ ...p, imageUrl: e.target.value }))}
+          placeholder="https://..."
+          className="bg-muted border-border text-foreground font-body"
+        />
+      </div>
+      <div className="flex gap-3 pt-2">
+        <Button
+          type="submit"
+          data-ocid="admin.actor.submit_button"
           disabled={isPending}
           className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold uppercase tracking-wider gap-2"
         >
@@ -396,7 +521,7 @@ function ArtistManagement() {
       {/* Add form */}
       <div className="bg-card border border-border p-6">
         <h3 className="font-display font-bold text-lg text-foreground mb-6 flex items-center gap-2">
-          <Plus className="w-4 h-4 text-gold" />
+          <Plus className="w-4 h-4 text-ice" />
           Add New Artist
         </h3>
         <ArtistForm
@@ -576,7 +701,7 @@ function ReleaseManagement() {
       {/* Add form */}
       <div className="bg-card border border-border p-6">
         <h3 className="font-display font-bold text-lg text-foreground mb-6 flex items-center gap-2">
-          <Plus className="w-4 h-4 text-gold" />
+          <Plus className="w-4 h-4 text-ice" />
           Add New Release
         </h3>
         {artists.length === 0 ? (
@@ -706,6 +831,166 @@ function ReleaseManagement() {
   );
 }
 
+// ===== ACTOR MANAGEMENT =====
+function ActorManagement() {
+  const { data: actors = [] } = useListDomainActors();
+  const addMutation = useAddDomainActor();
+  const updateMutation = useUpdateDomainActor();
+  const deleteMutation = useDeleteDomainActor();
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const handleAdd = (data: ActorFormData) => {
+    addMutation.mutate(data, {
+      onSuccess: () => toast.success("Actor added successfully"),
+      onError: () => toast.error("Failed to add actor"),
+    });
+  };
+
+  const handleUpdate = (id: bigint, data: ActorFormData) => {
+    updateMutation.mutate(
+      { id, ...data },
+      {
+        onSuccess: () => {
+          toast.success("Actor updated");
+          setEditingId(null);
+        },
+        onError: () => toast.error("Failed to update actor"),
+      },
+    );
+  };
+
+  const handleDelete = (id: bigint) => {
+    deleteMutation.mutate(id, {
+      onSuccess: () => toast.success("Actor removed"),
+      onError: () => toast.error("Failed to delete actor"),
+    });
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Add form */}
+      <div className="bg-card border border-border p-6">
+        <h3 className="font-display font-bold text-lg text-foreground mb-6 flex items-center gap-2">
+          <Plus className="w-4 h-4 text-ice" />
+          Add New Actor
+        </h3>
+        <ActorForm
+          onSubmit={handleAdd}
+          isPending={addMutation.isPending}
+          submitLabel="Add Actor"
+        />
+      </div>
+
+      {/* Actor list */}
+      <div className="bg-card border border-border">
+        <div className="p-4 border-b border-border">
+          <h3 className="font-display font-bold text-base text-foreground">
+            Talent Roster ({actors.length})
+          </h3>
+        </div>
+        {actors.length === 0 ? (
+          <div
+            data-ocid="admin.actor.empty_state"
+            className="p-8 text-center text-muted-foreground font-body text-sm"
+          >
+            No actors yet. Add your first actor above.
+          </div>
+        ) : (
+          <div className="divide-y divide-border">
+            {actors.map((actor: DomainActor, index: number) => (
+              <div key={String(actor.id)}>
+                {editingId === String(actor.id) ? (
+                  <div className="p-4 bg-muted/20">
+                    <ActorForm
+                      initial={{
+                        name: actor.name,
+                        specialty: actor.specialty,
+                        bio: actor.bio,
+                        imageUrl: actor.imageUrl,
+                      }}
+                      onSubmit={(data) => handleUpdate(actor.id, data)}
+                      onCancel={() => setEditingId(null)}
+                      isPending={updateMutation.isPending}
+                      submitLabel="Save Changes"
+                    />
+                  </div>
+                ) : (
+                  <div className="p-4 flex items-center gap-4">
+                    {actor.imageUrl && (
+                      <img
+                        src={actor.imageUrl}
+                        alt={actor.name}
+                        className="w-10 h-10 rounded-sm object-cover shrink-0 bg-muted"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display font-bold text-sm text-foreground">
+                        {actor.name}
+                      </p>
+                      <p className="font-body text-xs text-muted-foreground">
+                        {actor.specialty || "No specialty listed"}
+                      </p>
+                    </div>
+                    <div className="flex gap-2 shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        data-ocid={`admin.actor.edit_button.${index + 1}`}
+                        onClick={() => setEditingId(String(actor.id))}
+                        className="w-8 h-8 text-muted-foreground hover:text-foreground"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            data-ocid={`admin.actor.delete_button.${index + 1}`}
+                            className="w-8 h-8 text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="bg-popover border-border">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="font-display text-foreground">
+                              Delete {actor.name}?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="font-body text-muted-foreground">
+                              This will permanently remove the actor from the
+                              roster. This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel
+                              data-ocid="admin.actor.cancel_button"
+                              className="font-body"
+                            >
+                              Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              data-ocid="admin.actor.confirm_button"
+                              onClick={() => handleDelete(actor.id)}
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-body"
+                            >
+                              Delete Actor
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ===== MAIN ADMIN PAGE =====
 export default function AdminPage() {
   const { identity, login, isLoggingIn } = useInternetIdentity();
@@ -723,7 +1008,7 @@ export default function AdminPage() {
           <div className="w-16 h-16 rounded-sm bg-primary/10 flex items-center justify-center mx-auto mb-6">
             <ShieldAlert
               className="w-8 h-8"
-              style={{ color: "oklch(var(--gold))" }}
+              style={{ color: "oklch(var(--ice))" }}
             />
           </div>
           <h2 className="font-display font-black text-3xl text-foreground mb-3">
@@ -758,7 +1043,7 @@ export default function AdminPage() {
       >
         <Loader2
           className="w-8 h-8 animate-spin"
-          style={{ color: "oklch(var(--gold))" }}
+          style={{ color: "oklch(var(--ice))" }}
         />
       </div>
     );
@@ -795,7 +1080,7 @@ export default function AdminPage() {
           className="absolute inset-0 opacity-20"
           style={{
             background:
-              "radial-gradient(ellipse 60% 80% at 50% -30%, oklch(0.78 0.16 68 / 0.15) 0%, transparent 60%)",
+              "radial-gradient(ellipse 60% 80% at 50% -30%, oklch(0.75 0.18 210 / 0.15) 0%, transparent 60%)",
           }}
         />
         <div className="container mx-auto max-w-7xl relative z-10">
@@ -804,14 +1089,14 @@ export default function AdminPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="font-body text-xs uppercase tracking-[0.3em] text-gold mb-4">
+            <p className="font-body text-xs uppercase tracking-[0.3em] text-ice mb-4">
               Management Panel
             </p>
             <h1 className="font-display font-black text-4xl sm:text-5xl text-foreground mb-2">
               Admin Dashboard
             </h1>
             <p className="font-body text-muted-foreground">
-              Manage your artist roster and music releases.
+              Manage artists, releases, and actors across GOAT Enterprise.
             </p>
           </motion.div>
         </div>
@@ -823,7 +1108,7 @@ export default function AdminPage() {
           <Tabs defaultValue="artists" className="space-y-8">
             <TabsList
               data-ocid="admin.tab"
-              className="bg-card border border-border p-1 w-full sm:w-auto grid grid-cols-2 sm:flex gap-0"
+              className="bg-card border border-border p-1 w-full sm:w-auto grid grid-cols-3 sm:flex gap-0"
             >
               <TabsTrigger
                 value="artists"
@@ -839,6 +1124,13 @@ export default function AdminPage() {
                 <Disc3 className="w-3.5 h-3.5" />
                 Releases
               </TabsTrigger>
+              <TabsTrigger
+                value="actors"
+                className="font-body uppercase tracking-wider text-xs gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
+                <Clapperboard className="w-3.5 h-3.5" />
+                Actors
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="artists">
@@ -847,6 +1139,10 @@ export default function AdminPage() {
 
             <TabsContent value="releases">
               <ReleaseManagement />
+            </TabsContent>
+
+            <TabsContent value="actors">
+              <ActorManagement />
             </TabsContent>
           </Tabs>
         </div>

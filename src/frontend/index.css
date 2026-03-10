@@ -39,65 +39,65 @@
   :root {
     --radius: 0.25rem;
 
-    /* === GOAT Music — Dark Premium Theme === */
-    /* Background: near-black charcoal */
-    --background: 0.1 0.005 260;
-    --foreground: 0.95 0.01 80;
+    /* === GOAT Music — Icy Blue & Navy Theme === */
+    /* Background: deep navy */
+    --background: 0.1 0.03 240;
+    --foreground: 0.95 0.015 210;
 
-    /* Cards: very dark with slight warmth */
-    --card: 0.13 0.008 260;
-    --card-foreground: 0.95 0.01 80;
+    /* Cards: slightly lighter navy */
+    --card: 0.13 0.035 240;
+    --card-foreground: 0.95 0.015 210;
 
     /* Popover */
-    --popover: 0.15 0.01 260;
-    --popover-foreground: 0.95 0.01 80;
+    --popover: 0.15 0.035 240;
+    --popover-foreground: 0.95 0.015 210;
 
-    /* Primary: gold/amber — the signature accent */
-    --primary: 0.78 0.16 68;
-    --primary-foreground: 0.08 0.01 260;
+    /* Primary: icy blue — the signature accent */
+    --primary: 0.75 0.18 210;
+    --primary-foreground: 0.08 0.02 240;
 
-    /* Secondary: dark muted surface */
-    --secondary: 0.18 0.01 260;
-    --secondary-foreground: 0.85 0.01 80;
+    /* Secondary: dark navy surface */
+    --secondary: 0.18 0.03 240;
+    --secondary-foreground: 0.85 0.015 210;
 
     /* Muted */
-    --muted: 0.16 0.008 260;
-    --muted-foreground: 0.55 0.01 80;
+    --muted: 0.16 0.025 240;
+    --muted-foreground: 0.55 0.02 220;
 
-    /* Accent: bright gold flash */
-    --accent: 0.82 0.18 68;
-    --accent-foreground: 0.08 0.01 260;
+    /* Accent: bright icy flash */
+    --accent: 0.82 0.2 200;
+    --accent-foreground: 0.08 0.02 240;
 
     /* Destructive: deep red */
     --destructive: 0.6 0.22 25;
     --destructive-foreground: 0.98 0 0;
 
     /* Borders & inputs */
-    --border: 0.22 0.01 260;
-    --input: 0.2 0.01 260;
-    --ring: 0.78 0.16 68;
+    --border: 0.22 0.03 240;
+    --input: 0.2 0.03 240;
+    --ring: 0.75 0.18 210;
 
     /* Charts */
-    --chart-1: 0.78 0.16 68;
+    --chart-1: 0.75 0.18 210;
     --chart-2: 0.65 0.18 25;
-    --chart-3: 0.7 0.15 290;
-    --chart-4: 0.72 0.12 160;
+    --chart-3: 0.7 0.15 180;
+    --chart-4: 0.72 0.12 260;
     --chart-5: 0.6 0.2 220;
 
     /* Sidebar */
-    --sidebar: 0.12 0.008 260;
-    --sidebar-foreground: 0.9 0.01 80;
-    --sidebar-primary: 0.78 0.16 68;
-    --sidebar-primary-foreground: 0.08 0.01 260;
-    --sidebar-accent: 0.18 0.01 260;
-    --sidebar-accent-foreground: 0.9 0.01 80;
-    --sidebar-border: 0.22 0.01 260;
-    --sidebar-ring: 0.78 0.16 68;
+    --sidebar: 0.09 0.03 240;
+    --sidebar-foreground: 0.9 0.015 210;
+    --sidebar-primary: 0.75 0.18 210;
+    --sidebar-primary-foreground: 0.08 0.02 240;
+    --sidebar-accent: 0.18 0.03 240;
+    --sidebar-accent-foreground: 0.9 0.015 210;
+    --sidebar-border: 0.22 0.03 240;
+    --sidebar-ring: 0.75 0.18 210;
 
-    /* Gold custom tokens */
-    --gold: 0.78 0.16 68;
-    --gold-bright: 0.85 0.2 75;
-    --gold-dim: 0.6 0.12 68;
+    /* Icy blue custom tokens */
+    --ice: 0.75 0.18 210;
+    --ice-bright: 0.85 0.22 200;
+    --ice-dim: 0.55 0.12 220;
   }
 
   * {
@@ -123,13 +123,13 @@
 }
 
 @layer components {
-  /* Gold shimmer text */
-  .text-gold {
-    color: oklch(var(--gold));
+  /* Icy blue text */
+  .text-ice {
+    color: oklch(var(--ice));
   }
 
-  .text-gold-bright {
-    color: oklch(var(--gold-bright));
+  .text-ice-bright {
+    color: oklch(var(--ice-bright));
   }
 
   /* Grain texture overlay */
@@ -147,9 +147,9 @@
     border-radius: inherit;
   }
 
-  /* Gold border glow */
-  .gold-glow {
-    box-shadow: 0 0 20px oklch(var(--gold) / 0.2), 0 0 60px oklch(var(--gold) / 0.05);
+  /* Icy blue border glow */
+  .ice-glow {
+    box-shadow: 0 0 20px oklch(var(--ice) / 0.2), 0 0 60px oklch(var(--ice) / 0.05);
   }
 
   /* Animated underline */
@@ -164,7 +164,7 @@
     left: 0;
     width: 0;
     height: 1px;
-    background: oklch(var(--gold));
+    background: oklch(var(--ice));
     transition: width 0.3s ease;
   }
 
@@ -177,7 +177,7 @@
     font-family: "Geist Mono", monospace;
     font-size: 0.7rem;
     letter-spacing: 0.05em;
-    color: oklch(var(--gold-dim));
+    color: oklch(var(--ice-dim));
   }
 }
 

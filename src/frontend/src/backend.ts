@@ -96,6 +96,13 @@ export interface Artist {
     imageUrl: string;
     genre: string;
 }
+export interface DomainActor {
+    id: bigint;
+    bio: string;
+    name: string;
+    specialty: string;
+    imageUrl: string;
+}
 export interface Release {
     id: bigint;
     title: string;
@@ -114,24 +121,29 @@ export enum UserRole {
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     addArtist(name: string, genre: string, bio: string, imageUrl: string): Promise<bigint>;
+    addDomainActor(name: string, specialty: string, bio: string, imageUrl: string): Promise<bigint>;
     addRelease(title: string, artistId: bigint, year: bigint, genre: string): Promise<bigint>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteArtist(id: bigint): Promise<void>;
+    deleteDomainActor(id: bigint): Promise<void>;
     deleteRelease(id: bigint): Promise<void>;
     getArtist(_id: bigint): Promise<Artist | null>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getDomainActor(_id: bigint): Promise<DomainActor | null>;
     getRelease(_id: bigint): Promise<Release | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     listArtists(): Promise<Array<Artist>>;
+    listDomainActors(): Promise<Array<DomainActor>>;
     listReleases(): Promise<Array<Release>>;
     listReleasesByArtist(artistId: bigint): Promise<Array<Release>>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     updateArtist(id: bigint, name: string, genre: string, bio: string, imageUrl: string): Promise<void>;
+    updateDomainActor(id: bigint, name: string, specialty: string, bio: string, imageUrl: string): Promise<void>;
     updateRelease(id: bigint, title: string, artistId: bigint, year: bigint, genre: string): Promise<void>;
 }
-import type { Artist as _Artist, Release as _Release, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { Artist as _Artist, DomainActor as _DomainActor, Release as _Release, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -159,6 +171,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.addArtist(arg0, arg1, arg2, arg3);
+            return result;
+        }
+    }
+    async addDomainActor(arg0: string, arg1: string, arg2: string, arg3: string): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addDomainActor(arg0, arg1, arg2, arg3);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addDomainActor(arg0, arg1, arg2, arg3);
             return result;
         }
     }
@@ -201,6 +227,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.deleteArtist(arg0);
+            return result;
+        }
+    }
+    async deleteDomainActor(arg0: bigint): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteDomainActor(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteDomainActor(arg0);
             return result;
         }
     }
@@ -260,18 +300,32 @@ export class Backend implements backendInterface {
             return from_candid_UserRole_n5(this._uploadFile, this._downloadFile, result);
         }
     }
-    async getRelease(arg0: bigint): Promise<Release | null> {
+    async getDomainActor(arg0: bigint): Promise<DomainActor | null> {
         if (this.processError) {
             try {
-                const result = await this.actor.getRelease(arg0);
+                const result = await this.actor.getDomainActor(arg0);
                 return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getRelease(arg0);
+            const result = await this.actor.getDomainActor(arg0);
             return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getRelease(arg0: bigint): Promise<Release | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getRelease(arg0);
+                return from_candid_opt_n8(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getRelease(arg0);
+            return from_candid_opt_n8(this._uploadFile, this._downloadFile, result);
         }
     }
     async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
@@ -313,6 +367,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.listArtists();
+            return result;
+        }
+    }
+    async listDomainActors(): Promise<Array<DomainActor>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.listDomainActors();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.listDomainActors();
             return result;
         }
     }
@@ -372,6 +440,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async updateDomainActor(arg0: bigint, arg1: string, arg2: string, arg3: string, arg4: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateDomainActor(arg0, arg1, arg2, arg3, arg4);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateDomainActor(arg0, arg1, arg2, arg3, arg4);
+            return result;
+        }
+    }
     async updateRelease(arg0: bigint, arg1: string, arg2: bigint, arg3: bigint, arg4: string): Promise<void> {
         if (this.processError) {
             try {
@@ -396,7 +478,10 @@ function from_candid_opt_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Ar
 function from_candid_opt_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Release]): Release | null {
+function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_DomainActor]): DomainActor | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Release]): Release | null {
     return value.length === 0 ? null : value[0];
 }
 function from_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {

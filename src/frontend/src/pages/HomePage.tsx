@@ -1,40 +1,8 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  Award,
-  Disc3,
-  Globe,
-  Mic,
-  Play,
-  Users,
-} from "lucide-react";
+import { ArrowRight, BookOpen, Clapperboard, Mic2, Shield } from "lucide-react";
 import { motion } from "motion/react";
-
-const STATS = [
-  { label: "Signed Artists", value: "24+" },
-  { label: "Releases", value: "200+" },
-  { label: "Countries", value: "40+" },
-  { label: "Streams", value: "1B+" },
-];
-
-const FEATURES = [
-  {
-    icon: Mic,
-    title: "Artist Development",
-    desc: "We cultivate talent from the ground up, providing full creative support, production resources, and career guidance to every artist on our roster.",
-  },
-  {
-    icon: Globe,
-    title: "Global Distribution",
-    desc: "Your music on every platform, in every territory. GOAT Music's distribution network reaches 150+ streaming services and 40+ countries worldwide.",
-  },
-  {
-    icon: Award,
-    title: "Award-Winning Catalog",
-    desc: "From Grammy nominees to platinum-certified releases, our catalog represents the pinnacle of contemporary music across all major genres.",
-  },
-];
 
 const container = {
   hidden: { opacity: 0 },
@@ -53,12 +21,51 @@ const item = {
   },
 };
 
+const DIVISIONS = [
+  {
+    id: "recordings",
+    to: "/recordings",
+    label: "GOAT Recordings",
+    subtitle: "Music Label",
+    description:
+      "Our flagship music label — home to chart-topping artists across hip-hop, R&B, electronic, and beyond. Every release carries the GOAT standard of excellence.",
+    icon: Mic2,
+    badge: null,
+    accent: "oklch(0.75 0.18 210)",
+    ocid: "home.recordings.card",
+  },
+  {
+    id: "comics",
+    to: "/comics",
+    label: "StripClub Comics",
+    subtitle: "Comic Imprint",
+    description:
+      "GOAT Enterprise's bold comic book imprint. Boundary-pushing stories told without compromise — strips that take it to the edge.",
+    icon: BookOpen,
+    badge: "12+",
+    accent: "oklch(0.72 0.22 25)",
+    ocid: "home.comics.card",
+  },
+  {
+    id: "actors",
+    to: "/actors",
+    label: "GOAT Actors",
+    subtitle: "Talent Division",
+    description:
+      "A curated roster of exceptional performing talent operating under the GOAT enterprise umbrella. Versatile. Disciplined. Unforgettable.",
+    icon: Clapperboard,
+    badge: null,
+    accent: "oklch(0.75 0.15 270)",
+    ocid: "home.actors.card",
+  },
+];
+
 export default function HomePage() {
   return (
     <div className="overflow-hidden">
       {/* Hero */}
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
-        {/* Background image */}
+        {/* Background */}
         <div className="absolute inset-0">
           <img
             src="/assets/generated/hero-bg.dim_1600x900.jpg"
@@ -66,13 +73,12 @@ export default function HomePage() {
             className="w-full h-full object-cover"
             loading="eager"
           />
-          <div className="absolute inset-0 bg-background/60" />
-          {/* Radial gold glow */}
+          <div className="absolute inset-0 bg-background/65" />
           <div
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse 60% 50% at 50% 60%, oklch(0.78 0.16 68 / 0.08) 0%, transparent 70%)",
+                "radial-gradient(ellipse 60% 50% at 50% 60%, oklch(0.75 0.18 210 / 0.1) 0%, transparent 70%)",
             }}
           />
         </div>
@@ -86,9 +92,9 @@ export default function HomePage() {
         >
           {/* Label pill */}
           <motion.div variants={item} className="mb-8 flex justify-center">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 border border-gold/30 rounded-full text-xs font-body uppercase tracking-[0.2em] text-gold bg-gold/5">
-              <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-              Premium Music Label
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 border border-ice/30 rounded-full text-xs font-body uppercase tracking-[0.2em] text-ice bg-ice/5">
+              <span className="w-1.5 h-1.5 rounded-full bg-ice animate-pulse" />
+              Enterprise License
             </span>
           </motion.div>
 
@@ -102,7 +108,7 @@ export default function HomePage() {
               className="block"
               style={{
                 background:
-                  "linear-gradient(135deg, oklch(0.85 0.2 75) 0%, oklch(0.78 0.16 68) 50%, oklch(0.6 0.12 68) 100%)",
+                  "linear-gradient(135deg, oklch(0.88 0.22 200) 0%, oklch(0.75 0.18 210) 50%, oklch(0.55 0.12 220) 100%)",
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -110,16 +116,22 @@ export default function HomePage() {
             >
               G.O.A.T.
             </span>
-            <span className="block text-foreground/80">STANDARD</span>
+            <span className="block text-foreground/80">ENTERPRISE</span>
           </motion.h1>
 
           {/* Subheading */}
           <motion.p
             variants={item}
-            className="font-body text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="font-body text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed"
           >
-            GOAT Music Company — home to the world's most exceptional artists.
-            We don't follow the industry; we define it.
+            Recordings. Comics. Talent.
+          </motion.p>
+          <motion.p
+            variants={item}
+            className="font-body text-base text-muted-foreground/70 max-w-xl mx-auto mb-10 leading-relaxed"
+          >
+            Three divisions. One enterprise license. An uncompromising standard
+            of creative excellence across music, print, and performance.
           </motion.p>
 
           {/* CTAs */}
@@ -127,23 +139,23 @@ export default function HomePage() {
             variants={item}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <Link to="/roster">
+            <Link to="/recordings" data-ocid="home.recordings.primary_button">
               <Button
                 size="lg"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold uppercase tracking-wider gap-2 px-8 h-12 shadow-gold"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold uppercase tracking-wider gap-2 px-8 h-12 shadow-ice"
               >
-                Discover Artists
+                Explore Divisions
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
-            <Link to="/catalog">
+            <Link to="/comics" data-ocid="home.comics.secondary_button">
               <Button
                 variant="outline"
                 size="lg"
-                className="border-border hover:border-gold/50 hover:text-gold font-bold uppercase tracking-wider gap-2 px-8 h-12 transition-all"
+                className="border-border hover:border-ice/50 hover:text-ice font-bold uppercase tracking-wider gap-2 px-8 h-12 transition-all"
               >
-                <Play className="w-4 h-4 fill-current" />
-                Browse Catalog
+                <BookOpen className="w-4 h-4" />
+                StripClub Comics
               </Button>
             </Link>
           </motion.div>
@@ -166,43 +178,12 @@ export default function HomePage() {
               duration: 1.5,
               ease: "easeInOut",
             }}
-            className="w-px h-8 bg-gradient-to-b from-gold/60 to-transparent"
+            className="w-px h-8 bg-gradient-to-b from-ice/60 to-transparent"
           />
         </motion.div>
       </section>
 
-      {/* Stats bar */}
-      <section className="border-y border-border bg-card/40 py-8">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            variants={container}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8"
-          >
-            {STATS.map((stat) => (
-              <motion.div
-                key={stat.label}
-                variants={item}
-                className="text-center"
-              >
-                <div
-                  className="font-display font-black text-4xl sm:text-5xl"
-                  style={{ color: "oklch(var(--gold))" }}
-                >
-                  {stat.value}
-                </div>
-                <div className="font-body text-xs uppercase tracking-[0.15em] text-muted-foreground mt-1">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Features section */}
+      {/* Divisions section */}
       <section className="py-24 px-4">
         <div className="container mx-auto max-w-7xl">
           <motion.div
@@ -214,17 +195,17 @@ export default function HomePage() {
           >
             <motion.p
               variants={item}
-              className="font-body text-xs uppercase tracking-[0.3em] text-gold mb-4"
+              className="font-body text-xs uppercase tracking-[0.3em] text-ice mb-4"
             >
-              Why GOAT Music
+              Our Divisions
             </motion.p>
             <motion.h2
               variants={item}
               className="font-display font-black text-4xl sm:text-5xl md:text-6xl text-foreground"
             >
-              Redefining the
+              Three Arms,
               <br />
-              <span className="text-muted-foreground">Music Business</span>
+              <span className="text-muted-foreground">One Vision</span>
             </motion.h2>
           </motion.div>
 
@@ -233,85 +214,160 @@ export default function HomePage() {
             whileInView="show"
             viewport={{ once: true, margin: "-80px" }}
             variants={container}
-            className="grid md:grid-cols-3 gap-px bg-border"
+            className="grid md:grid-cols-3 gap-6"
           >
-            {FEATURES.map((feat) => (
-              <motion.div
-                key={feat.title}
-                variants={item}
-                className="bg-background p-8 lg:p-12 group hover:bg-card transition-colors"
-              >
-                <div className="w-12 h-12 rounded-sm bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                  <feat.icon
-                    className="w-5 h-5"
-                    style={{ color: "oklch(var(--gold))" }}
-                  />
-                </div>
-                <h3 className="font-display font-bold text-xl text-foreground mb-3">
-                  {feat.title}
-                </h3>
-                <p className="font-body text-sm text-muted-foreground leading-relaxed">
-                  {feat.desc}
-                </p>
+            {DIVISIONS.map((div) => (
+              <motion.div key={div.id} variants={item}>
+                <Link
+                  to={div.to}
+                  data-ocid={div.ocid}
+                  className="group block h-full"
+                >
+                  <div
+                    className="relative h-full bg-card border border-border p-8 lg:p-10 hover:border-opacity-60 transition-all duration-300 hover:shadow-card overflow-hidden"
+                    style={{
+                      ["--div-accent" as string]: div.accent,
+                    }}
+                  >
+                    {/* Background glow on hover */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        background: `radial-gradient(ellipse 70% 50% at 30% 30%, ${div.accent}10 0%, transparent 70%)`,
+                      }}
+                    />
+
+                    {/* Icon + badge row */}
+                    <div className="flex items-start justify-between mb-6 relative z-10">
+                      <div
+                        className="w-14 h-14 rounded-sm flex items-center justify-center"
+                        style={{ background: `${div.accent}18` }}
+                      >
+                        <div.icon
+                          className="w-6 h-6"
+                          style={{ color: div.accent }}
+                        />
+                      </div>
+                      {div.badge && (
+                        <Badge
+                          className="font-display font-black text-sm px-3 py-1 border-0 rounded-sm"
+                          style={{
+                            background: `${div.accent}25`,
+                            color: div.accent,
+                          }}
+                        >
+                          {div.badge}
+                        </Badge>
+                      )}
+                    </div>
+
+                    {/* Text */}
+                    <div className="relative z-10">
+                      <p
+                        className="font-body text-xs uppercase tracking-[0.2em] mb-2"
+                        style={{ color: div.accent }}
+                      >
+                        {div.subtitle}
+                      </p>
+                      <h3 className="font-display font-black text-2xl lg:text-3xl text-foreground mb-4 leading-tight">
+                        {div.label}
+                      </h3>
+                      <p className="font-body text-sm text-muted-foreground leading-relaxed mb-6">
+                        {div.description}
+                      </p>
+                      <div
+                        className="flex items-center gap-2 font-body text-xs font-bold uppercase tracking-wider transition-all duration-200 group-hover:gap-3"
+                        style={{ color: div.accent }}
+                      >
+                        Explore
+                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                      </div>
+                    </div>
+
+                    {/* Bottom accent line */}
+                    <div
+                      className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ background: div.accent }}
+                    />
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* CTA section */}
-      <section className="py-24 px-4 relative overflow-hidden">
+      {/* Enterprise License section */}
+      <section className="py-20 px-4 border-t border-border relative overflow-hidden">
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-30"
           style={{
             background:
-              "radial-gradient(ellipse 80% 60% at 50% 50%, oklch(0.78 0.16 68 / 0.07) 0%, transparent 70%)",
+              "radial-gradient(ellipse 80% 60% at 50% 50%, oklch(0.75 0.18 210 / 0.06) 0%, transparent 70%)",
           }}
         />
-        <div className="container mx-auto max-w-4xl relative z-10 text-center">
+        <div className="container mx-auto max-w-4xl relative z-10">
           <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
             variants={container}
+            className="text-center"
           >
+            <motion.div
+              variants={item}
+              className="w-16 h-16 rounded-sm bg-primary/10 flex items-center justify-center mx-auto mb-8"
+            >
+              <Shield
+                className="w-7 h-7"
+                style={{ color: "oklch(var(--ice))" }}
+              />
+            </motion.div>
             <motion.p
               variants={item}
-              className="font-body text-xs uppercase tracking-[0.3em] text-gold mb-6"
+              className="font-body text-xs uppercase tracking-[0.3em] text-ice mb-4"
             >
-              Full Roster & Catalog
+              GOAT Enterprise License
             </motion.p>
             <motion.h2
               variants={item}
-              className="font-display font-black text-5xl sm:text-6xl md:text-7xl text-foreground mb-8"
+              className="font-display font-black text-4xl sm:text-5xl text-foreground mb-6"
             >
-              Explore Our
+              One License.
               <br />
-              <span className="text-gold">Universe</span>
+              Three Divisions.
             </motion.h2>
+            <motion.p
+              variants={item}
+              className="font-body text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-10 text-base"
+            >
+              GOAT Recordings, StripClub Comics, and GOAT Actors all operate
+              under the unified GOAT Enterprise License — a single legal and
+              creative framework that ensures quality, ownership, and
+              accountability across every creative vertical.
+            </motion.p>
+
             <motion.div
               variants={item}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              className="grid sm:grid-cols-3 gap-px bg-border max-w-2xl mx-auto"
             >
-              <Link to="/roster">
-                <Button
-                  size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold uppercase tracking-wider gap-2 px-10 h-14 text-base shadow-gold"
+              {[
+                { label: "GOAT Recordings", desc: "Music Label" },
+                { label: "StripClub Comics", desc: "Comic Imprint" },
+                { label: "GOAT Actors", desc: "Talent Division" },
+              ].map((div) => (
+                <div
+                  key={div.label}
+                  className="bg-background px-6 py-5 text-center"
                 >
-                  <Users className="w-5 h-5" />
-                  Our Artists
-                </Button>
-              </Link>
-              <Link to="/catalog">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-border hover:border-gold/50 hover:text-gold font-bold uppercase tracking-wider gap-2 px-10 h-14 text-base transition-all"
-                >
-                  <Disc3 className="w-5 h-5" />
-                  All Releases
-                </Button>
-              </Link>
+                  <p className="font-display font-bold text-sm text-foreground mb-1">
+                    {div.label}
+                  </p>
+                  <p className="font-body text-xs text-muted-foreground uppercase tracking-wider">
+                    {div.desc}
+                  </p>
+                </div>
+              ))}
             </motion.div>
           </motion.div>
         </div>

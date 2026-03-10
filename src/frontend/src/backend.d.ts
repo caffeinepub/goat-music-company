@@ -14,6 +14,13 @@ export interface Artist {
     imageUrl: string;
     genre: string;
 }
+export interface DomainActor {
+    id: bigint;
+    bio: string;
+    name: string;
+    specialty: string;
+    imageUrl: string;
+}
 export interface Release {
     id: bigint;
     title: string;
@@ -31,20 +38,25 @@ export enum UserRole {
 }
 export interface backendInterface {
     addArtist(name: string, genre: string, bio: string, imageUrl: string): Promise<bigint>;
+    addDomainActor(name: string, specialty: string, bio: string, imageUrl: string): Promise<bigint>;
     addRelease(title: string, artistId: bigint, year: bigint, genre: string): Promise<bigint>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteArtist(id: bigint): Promise<void>;
+    deleteDomainActor(id: bigint): Promise<void>;
     deleteRelease(id: bigint): Promise<void>;
     getArtist(_id: bigint): Promise<Artist | null>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getDomainActor(_id: bigint): Promise<DomainActor | null>;
     getRelease(_id: bigint): Promise<Release | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     listArtists(): Promise<Array<Artist>>;
+    listDomainActors(): Promise<Array<DomainActor>>;
     listReleases(): Promise<Array<Release>>;
     listReleasesByArtist(artistId: bigint): Promise<Array<Release>>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     updateArtist(id: bigint, name: string, genre: string, bio: string, imageUrl: string): Promise<void>;
+    updateDomainActor(id: bigint, name: string, specialty: string, bio: string, imageUrl: string): Promise<void>;
     updateRelease(id: bigint, title: string, artistId: bigint, year: bigint, genre: string): Promise<void>;
 }

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Artist, Release } from "../backend.d";
+import type { Artist, DomainActor, Release } from "../backend.d";
 import { useActor } from "./useActor";
 
 // ===== QUERY HOOKS =====
@@ -24,6 +24,19 @@ export function useListReleases() {
     queryFn: async () => {
       if (!actor) return [];
       return actor.listReleases();
+    },
+    enabled: !!actor && !isFetching,
+    staleTime: 30_000,
+  });
+}
+
+export function useListDomainActors() {
+  const { actor, isFetching } = useActor();
+  return useQuery<DomainActor[]>({
+    queryKey: ["domainActors"],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.listDomainActors();
     },
     enabled: !!actor && !isFetching,
     staleTime: 30_000,
@@ -151,5 +164,63 @@ export function useDeleteRelease() {
       return actor.deleteRelease(id);
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["releases"] }),
+  });
+}
+
+export function useAddDomainActor() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      name: string;
+      specialty: string;
+      bio: string;
+      imageUrl: string;
+    }) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.addDomainActor(
+        data.name,
+        data.specialty,
+        data.bio,
+        data.imageUrl,
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["domainActors"] }),
+  });
+}
+
+export function useUpdateDomainActor() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      id: bigint;
+      name: string;
+      specialty: string;
+      bio: string;
+      imageUrl: string;
+    }) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.updateDomainActor(
+        data.id,
+        data.name,
+        data.specialty,
+        data.bio,
+        data.imageUrl,
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["domainActors"] }),
+  });
+}
+
+export function useDeleteDomainActor() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: bigint) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.deleteDomainActor(id);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["domainActors"] }),
   });
 }

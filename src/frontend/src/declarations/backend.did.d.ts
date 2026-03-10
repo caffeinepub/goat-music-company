@@ -17,6 +17,13 @@ export interface Artist {
   'imageUrl' : string,
   'genre' : string,
 }
+export interface DomainActor {
+  'id' : bigint,
+  'bio' : string,
+  'name' : string,
+  'specialty' : string,
+  'imageUrl' : string,
+}
 export interface Release {
   'id' : bigint,
   'title' : string,
@@ -31,21 +38,29 @@ export type UserRole = { 'admin' : null } |
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addArtist' : ActorMethod<[string, string, string, string], bigint>,
+  'addDomainActor' : ActorMethod<[string, string, string, string], bigint>,
   'addRelease' : ActorMethod<[string, bigint, bigint, string], bigint>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'deleteArtist' : ActorMethod<[bigint], undefined>,
+  'deleteDomainActor' : ActorMethod<[bigint], undefined>,
   'deleteRelease' : ActorMethod<[bigint], undefined>,
   'getArtist' : ActorMethod<[bigint], [] | [Artist]>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getDomainActor' : ActorMethod<[bigint], [] | [DomainActor]>,
   'getRelease' : ActorMethod<[bigint], [] | [Release]>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'listArtists' : ActorMethod<[], Array<Artist>>,
+  'listDomainActors' : ActorMethod<[], Array<DomainActor>>,
   'listReleases' : ActorMethod<[], Array<Release>>,
   'listReleasesByArtist' : ActorMethod<[bigint], Array<Release>>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'updateArtist' : ActorMethod<
+    [bigint, string, string, string, string],
+    undefined
+  >,
+  'updateDomainActor' : ActorMethod<
     [bigint, string, string, string, string],
     undefined
   >,

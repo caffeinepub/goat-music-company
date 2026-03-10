@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
-import { Disc, LogIn, LogOut, Music, Settings, Users } from "lucide-react";
+import {
+  BookOpen,
+  Clapperboard,
+  LogIn,
+  LogOut,
+  Mic2,
+  Settings,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import { useIsCallerAdmin } from "../hooks/useQueries";
@@ -18,9 +25,20 @@ export default function Layout({ children }: LayoutProps) {
   const isLoggedIn = !!identity;
 
   const navLinks = [
-    { to: "/", label: "Home", icon: Music, ocid: "nav.home.link" },
-    { to: "/roster", label: "Roster", icon: Users, ocid: "nav.roster.link" },
-    { to: "/catalog", label: "Catalog", icon: Disc, ocid: "nav.catalog.link" },
+    { to: "/", label: "Home", icon: Mic2, ocid: "nav.home.link" },
+    {
+      to: "/recordings",
+      label: "Recordings",
+      icon: Mic2,
+      ocid: "nav.recordings.link",
+    },
+    { to: "/comics", label: "Comics", icon: BookOpen, ocid: "nav.comics.link" },
+    {
+      to: "/actors",
+      label: "Actors",
+      icon: Clapperboard,
+      ocid: "nav.actors.link",
+    },
     ...(isAdmin
       ? [
           {
@@ -50,9 +68,14 @@ export default function Layout({ children }: LayoutProps) {
                   G
                 </span>
               </div>
-              <span className="font-display font-black text-sm uppercase tracking-widest text-foreground group-hover:text-gold transition-colors">
-                GOAT Music
-              </span>
+              <div className="flex flex-col leading-none">
+                <span className="font-display font-black text-xs uppercase tracking-widest text-foreground group-hover:text-ice transition-colors">
+                  GOAT
+                </span>
+                <span className="font-body text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+                  Enterprise
+                </span>
+              </div>
             </Link>
 
             {/* Nav links */}
@@ -66,14 +89,14 @@ export default function Layout({ children }: LayoutProps) {
                     data-ocid={link.ocid}
                     className={`
                       relative px-4 py-2 text-sm font-body font-medium uppercase tracking-wider transition-colors animated-underline
-                      ${isActive ? "text-gold" : "text-muted-foreground hover:text-foreground"}
+                      ${isActive ? "text-ice" : "text-muted-foreground hover:text-foreground"}
                     `}
                   >
                     {link.label}
                     {isActive && (
                       <motion.div
                         layoutId="nav-indicator"
-                        className="absolute bottom-0 left-0 right-0 h-px bg-gold"
+                        className="absolute bottom-0 left-0 right-0 h-px bg-ice"
                         transition={{
                           type: "spring",
                           stiffness: 380,
@@ -125,7 +148,7 @@ export default function Layout({ children }: LayoutProps) {
                   data-ocid={link.ocid}
                   className={`
                     flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-body font-medium uppercase tracking-wider whitespace-nowrap transition-colors
-                    ${isActive ? "bg-primary/10 text-gold" : "text-muted-foreground hover:text-foreground"}
+                    ${isActive ? "bg-primary/10 text-ice" : "text-muted-foreground hover:text-foreground"}
                   `}
                 >
                   <link.icon className="w-3 h-3" />
@@ -150,9 +173,14 @@ export default function Layout({ children }: LayoutProps) {
                   G
                 </span>
               </div>
-              <span className="font-display font-black text-xs uppercase tracking-widest text-muted-foreground">
-                GOAT Music Company
-              </span>
+              <div>
+                <span className="font-display font-black text-xs uppercase tracking-widest text-muted-foreground">
+                  GOAT Enterprise
+                </span>
+                <p className="font-body text-[10px] text-muted-foreground/60 uppercase tracking-wider">
+                  Recordings · Comics · Actors
+                </p>
+              </div>
             </div>
             <p className="text-xs text-muted-foreground font-body">
               © {new Date().getFullYear()}.{" "}
@@ -162,7 +190,7 @@ export default function Layout({ children }: LayoutProps) {
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-gold transition-colors"
+                className="hover:text-ice transition-colors"
               >
                 Built with ♥ using caffeine.ai
               </a>

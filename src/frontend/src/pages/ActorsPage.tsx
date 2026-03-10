@@ -1,9 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Music } from "lucide-react";
+import { Clapperboard } from "lucide-react";
 import { motion } from "motion/react";
-import type { Artist } from "../backend.d";
-import { useListArtists } from "../hooks/useQueries";
+import type { DomainActor } from "../backend.d";
+import { useListDomainActors } from "../hooks/useQueries";
 
 const container = {
   hidden: { opacity: 0 },
@@ -22,26 +22,32 @@ const card = {
   },
 };
 
-function ArtistCard({ artist, index }: { artist: Artist; index: number }) {
-  const ocid = `roster.item.${index + 1}`;
+function ActorCard({
+  actor,
+  index,
+}: {
+  actor: DomainActor;
+  index: number;
+}) {
+  const ocid = `actors.item.${index + 1}`;
   return (
     <motion.article
       variants={card}
       data-ocid={ocid}
       className="group relative bg-card border border-border overflow-hidden hover:border-ice/30 transition-all duration-300 hover:shadow-card"
     >
-      {/* Artist image */}
-      <div className="relative aspect-square overflow-hidden bg-muted">
-        {artist.imageUrl ? (
+      {/* Actor image */}
+      <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+        {actor.imageUrl ? (
           <img
-            src={artist.imageUrl}
-            alt={artist.name}
+            src={actor.imageUrl}
+            alt={actor.name}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             loading="lazy"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-secondary">
-            <Music
+            <Clapperboard
               className="w-12 h-12"
               style={{ color: "oklch(var(--ice-dim))" }}
             />
@@ -55,18 +61,22 @@ function ArtistCard({ artist, index }: { artist: Artist; index: number }) {
       <div className="p-6">
         <div className="flex items-start justify-between gap-3 mb-3">
           <h3 className="font-display font-black text-xl text-foreground leading-tight">
-            {artist.name}
+            {actor.name}
           </h3>
-          <Badge
-            variant="outline"
-            className="shrink-0 border-ice/30 text-ice text-[10px] uppercase tracking-wider font-body"
-          >
-            {artist.genre}
-          </Badge>
+          {actor.specialty && (
+            <Badge
+              variant="outline"
+              className="shrink-0 border-ice/30 text-ice text-[10px] uppercase tracking-wider font-body"
+            >
+              {actor.specialty}
+            </Badge>
+          )}
         </div>
-        <p className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-3">
-          {artist.bio}
-        </p>
+        {actor.bio && (
+          <p className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-3">
+            {actor.bio}
+          </p>
+        )}
       </div>
 
       {/* Bottom icy blue accent */}
@@ -78,15 +88,15 @@ function ArtistCard({ artist, index }: { artist: Artist; index: number }) {
   );
 }
 
-function RosterSkeleton() {
+function ActorsSkeleton() {
   return (
     <div
-      data-ocid="roster.loading_state"
+      data-ocid="actors.loading_state"
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
     >
-      {["sk1", "sk2", "sk3", "sk4", "sk5", "sk6"].map((sk) => (
-        <div key={sk} className="bg-card border border-border overflow-hidden">
-          <Skeleton className="aspect-square w-full" />
+      {[1, 2, 3, 4, 5, 6].map((i) => (
+        <div key={i} className="bg-card border border-border overflow-hidden">
+          <Skeleton className="aspect-[4/5] w-full" />
           <div className="p-6 space-y-3">
             <div className="flex justify-between">
               <Skeleton className="h-6 w-40" />
@@ -102,8 +112,8 @@ function RosterSkeleton() {
   );
 }
 
-export default function RosterPage() {
-  const { data: artists, isLoading, isError } = useListArtists();
+export default function ActorsPage() {
+  const { data: actors, isLoading, isError } = useListDomainActors();
 
   return (
     <div className="min-h-screen">
@@ -113,7 +123,7 @@ export default function RosterPage() {
           className="absolute inset-0 opacity-30"
           style={{
             background:
-              "radial-gradient(ellipse 70% 80% at 50% -20%, oklch(0.75 0.18 210 / 0.12) 0%, transparent 60%)",
+              "radial-gradient(ellipse 70% 80% at 50% -20%, oklch(0.75 0.15 270 / 0.12) 0%, transparent 60%)",
           }}
         />
         <div className="container mx-auto max-w-7xl relative z-10">
@@ -123,45 +133,45 @@ export default function RosterPage() {
             transition={{ duration: 0.6 }}
           >
             <p className="font-body text-xs uppercase tracking-[0.3em] text-ice mb-4">
-              GOAT Music Company
+              GOAT Enterprise
             </p>
             <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl text-foreground mb-4">
-              Artist Roster
+              Actors
             </h1>
             <p className="font-body text-lg text-muted-foreground max-w-2xl">
-              Meet the exceptional talent signed to GOAT Music Company — each
-              artist handpicked for their unique vision and uncompromising
-              artistry.
+              GOAT Actors — a curated roster of performing talent operating
+              under the GOAT enterprise umbrella. Versatile, disciplined, and
+              unforgettable.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Artist grid */}
+      {/* Actor grid */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-7xl">
           {isLoading ? (
-            <RosterSkeleton />
+            <ActorsSkeleton />
           ) : isError ? (
-            <div data-ocid="roster.error_state" className="text-center py-20">
+            <div data-ocid="actors.error_state" className="text-center py-20">
               <p className="font-body text-muted-foreground">
-                Failed to load artists. Please try again.
+                Failed to load actors. Please try again.
               </p>
             </div>
-          ) : !artists || artists.length === 0 ? (
+          ) : !actors || actors.length === 0 ? (
             <div
-              data-ocid="roster.empty_state"
+              data-ocid="actors.empty_state"
               className="text-center py-20 border border-dashed border-border rounded-sm"
             >
-              <Music
+              <Clapperboard
                 className="w-12 h-12 mx-auto mb-4 opacity-30"
                 style={{ color: "oklch(var(--ice))" }}
               />
               <h3 className="font-display font-bold text-xl text-muted-foreground mb-2">
-                No Artists Yet
+                No Actors Yet
               </h3>
               <p className="font-body text-sm text-muted-foreground">
-                The roster is being assembled. Check back soon.
+                The talent roster is being assembled. Check back soon.
               </p>
             </div>
           ) : (
@@ -171,12 +181,8 @@ export default function RosterPage() {
               animate="show"
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
             >
-              {artists.map((artist, index) => (
-                <ArtistCard
-                  key={String(artist.id)}
-                  artist={artist}
-                  index={index}
-                />
+              {actors.map((actor, index) => (
+                <ActorCard key={String(actor.id)} actor={actor} index={index} />
               ))}
             </motion.div>
           )}
